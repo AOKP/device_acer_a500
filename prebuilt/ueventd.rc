@@ -8,6 +8,13 @@
 /dev/ashmem               0666   root       root
 /dev/binder               0666   root       root
 
+/dev/ttyUSB0              0660   system     root
+/dev/ttyUSB1              0660   system     root
+/dev/ttyUSB2              0660   system     root
+/dev/ttyUSB3              0660   system     root
+/dev/ttyUSB4              0660   system     root
+/dev/ttyUSB5              0660   system     root
+
 # logger should be world writable (for logging) but not readable
 /dev/log/*                0662   root       log
 
@@ -70,11 +77,11 @@
 /dev/bus/usb/*            0660   root       usb
 /dev/mtp_usb              0660   root       mtp
 /dev/usb_accessory        0660   root       usb
+/dev/tun                  0660   system     vpn
 
 # CDMA radio interface MUX
 /dev/ts0710mux*           0640   radio      radio
 /dev/ppp                  0660   radio      vpn
-/dev/tun                  0640   vpn        vpn
 
 # sysfs properties
 /sys/devices/virtual/input/input*   enable      0660  root   input

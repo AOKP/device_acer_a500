@@ -29,11 +29,12 @@ PRODUCT_COPY_FILES := \
 	$(LOCAL_KERNEL):kernel \
 	device/acer/a500/prebuilt/init.goldfish.rc:/root/init.goldfish.rc \
 	device/acer/a500/prebuilt/init.rc:/root/init.rc \
-	device/acer/a500/prebuilt/init.picasso.rc:root/init.picasso.rc \
+	device/acer/a500/prebuilt/init.ventana.rc:root/init.ventana.rc \
 	device/acer/a500/prebuilt/picasso_postboot.sh:root/picasso_postboot.sh \
 	device/acer/a500/prebuilt/ueventd.goldfish.rc:root/ueventd.goldfish.rc \
 	device/acer/a500/prebuilt/ueventd.rc:root/ueventd.rc \
-	device/acer/a500/prebuilt/ueventd.picasso.rc:root/ueventd.picasso.rc 
+	device/acer/a500/prebuilt/init.ventana.usb.rc:root/init.ventana.usb.rc \
+	device/acer/a500/prebuilt/ueventd.ventana.rc:root/ueventd.ventana.rc 
 
 
 DEVICE_PACKAGE_OVERLAYS := \
@@ -82,10 +83,23 @@ PRODUCT_COPY_FILES += \
 	packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml \
 	device/acer/a500/prebuilt/system/vendor/firmware/fw_bcm4329_apsta.bin:system/vendor/firmware/fw_bcm4329_apsta.bin \
 	device/acer/a500/prebuilt/system/vendor/firmware/fw_bcm4329.bin:system/vendor/firmware/fw_bcm4329.bin \
+	device/acer/a500/prebuilt/system/vendor/firmware/bcm4329.hcd:system/vendor/firmware/bcm4329.hcd \
 	device/acer/a500/prebuilt/system/xbin/busybox:system/xbin/busybox \
 	device/acer/a500/modules/bcm4329.ko:system/lib/modules/bcm4329.ko \
-	device/acer/a500/modules/scsi_wait_scan.ko:system/lib/modules/scsi_wait_scan.ko
-	
+	device/acer/a500/modules/scsi_wait_scan.ko:system/lib/modules/scsi_wait_scan.ko \
+        device/acer/a500/idc/eGalax_Serial.idc:system/usr/idc/eGalax_Serial.idc \
+        device/acer/a500/idc/elantech_touchscreen.idc:system/usr/idc/elantech_touchscreen.idc \
+        device/acer/a500/prebuilt/system/permissions/android.hardware.sensor.proximity.xml:system/permissions/android.hardware.sensor.proximity.xml \
+        device/acer/a500/prebuilt/system/permissions/android.hardware.telephony.gsm.xml:system/permissions/android.hardware.telephony.gsm.xml \
+        device/acer/a500/prebuilt/system/permissions/android.hardware.wifi.direct.xml:system/permissions/android.hardware.wifi.direct.xml \
+        device/acer/a500/prebuilt/system/etc/firmware/fw_bcm4329.bin:system/etc/firmware/fw_bcm4329.bin \
+        device/acer/a500/prebuilt/system/etc/firmware/fw_bcm4329_apsta.bin:system/etc/firmware/fw_bcm4329_apsta.bin \
+        device/acer/a500/prebuilt/system/etc/firmware/nvmm_sw_mp3dec.axf:system/etc/firmware/nvmm_sw_mp3dec.axf
+
+# Copy toro specific prebuilt files
+PRODUCT_COPY_FILES +=  \
+    vendor/aokp/prebuilt/hdpi/bootanimation.zip:system/media/bootanimation.zip
+
 PRODUCT_PROPERTY_OVERRIDES := \
 	ro.opengles.version=131072
 
@@ -120,3 +134,4 @@ $(call inherit-product-if-exists, vendor/acer/a500/a500-vendor.mk)
 
 BOARD_WLAN_DEVICE_REV := bcm4329
 WIFI_BAND             := 802_11_ABG
+$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4329/device-bcm.mk)

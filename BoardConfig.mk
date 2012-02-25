@@ -47,7 +47,7 @@ BOARD_USES_GENERIC_AUDIO := false
 BOARD_PREBUILT_LIBAUDIO := true
 
 TARGET_LIBAGL_USE_GRALLOC_COPYBITS := true
-TARGET_OTA_ASSERT_DEVICE := a500,picasso
+#TARGET_OTA_ASSERT_DEVICE := a500,picasso
 #BOARD_NO_RGBX_8888 := true
 
 # Use screencap to capture frame buffer for ddms
