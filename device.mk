@@ -29,12 +29,12 @@ PRODUCT_COPY_FILES := \
 	$(LOCAL_KERNEL):kernel \
 	device/acer/a500/prebuilt/init.goldfish.rc:/root/init.goldfish.rc \
 	device/acer/a500/prebuilt/init.rc:/root/init.rc \
-	device/acer/a500/prebuilt/init.ventana.rc:root/init.ventana.rc \
-	device/acer/a500/prebuilt/picasso_postboot.sh:root/picasso_postboot.sh \
+	device/acer/a500/prebuilt/init.picasso.rc:root/init.picasso.rc \
+	device/acer/a500/prebuilt/postboot.sh:root/postboot.sh \
 	device/acer/a500/prebuilt/ueventd.goldfish.rc:root/ueventd.goldfish.rc \
 	device/acer/a500/prebuilt/ueventd.rc:root/ueventd.rc \
-	device/acer/a500/prebuilt/init.ventana.usb.rc:root/init.ventana.usb.rc \
-	device/acer/a500/prebuilt/ueventd.ventana.rc:root/ueventd.ventana.rc 
+	device/acer/a500/prebuilt/init.picasso.usb.rc:root/init.picasso.usb.rc \
+	device/acer/a500/prebuilt/ueventd.picasso.rc:root/ueventd.picasso.rc 
 
 
 DEVICE_PACKAGE_OVERLAYS := \
@@ -86,6 +86,7 @@ PRODUCT_COPY_FILES += \
 	device/acer/a500/prebuilt/system/vendor/firmware/bcm4329.hcd:system/vendor/firmware/bcm4329.hcd \
 	device/acer/a500/prebuilt/system/xbin/busybox:system/xbin/busybox \
 	device/acer/a500/modules/bcm4329.ko:system/lib/modules/bcm4329.ko \
+        device/acer/a500/modules/ufsd.ko:system/lib/modules/ufsd.ko \
 	device/acer/a500/modules/scsi_wait_scan.ko:system/lib/modules/scsi_wait_scan.ko \
         device/acer/a500/idc/eGalax_Serial.idc:system/usr/idc/eGalax_Serial.idc \
         device/acer/a500/idc/elantech_touchscreen.idc:system/usr/idc/elantech_touchscreen.idc \
