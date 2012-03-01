@@ -81,9 +81,6 @@ PRODUCT_COPY_FILES += \
 	frameworks/base/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
 	frameworks/base/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
 	packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml \
-	device/acer/a500/prebuilt/system/vendor/firmware/fw_bcm4329_apsta.bin:system/vendor/firmware/fw_bcm4329_apsta.bin \
-	device/acer/a500/prebuilt/system/vendor/firmware/fw_bcm4329.bin:system/vendor/firmware/fw_bcm4329.bin \
-	device/acer/a500/prebuilt/system/vendor/firmware/bcm4329.hcd:system/vendor/firmware/bcm4329.hcd \
 	device/acer/a500/prebuilt/system/xbin/busybox:system/xbin/busybox \
 	device/acer/a500/modules/bcm4329.ko:system/lib/modules/bcm4329.ko \
         device/acer/a500/modules/ufsd.ko:system/lib/modules/ufsd.ko \
@@ -95,7 +92,9 @@ PRODUCT_COPY_FILES += \
         device/acer/a500/prebuilt/system/permissions/android.hardware.wifi.direct.xml:system/permissions/android.hardware.wifi.direct.xml \
         device/acer/a500/prebuilt/system/etc/firmware/fw_bcm4329.bin:system/etc/firmware/fw_bcm4329.bin \
         device/acer/a500/prebuilt/system/etc/firmware/fw_bcm4329_apsta.bin:system/etc/firmware/fw_bcm4329_apsta.bin \
-        device/acer/a500/prebuilt/system/etc/firmware/nvmm_sw_mp3dec.axf:system/etc/firmware/nvmm_sw_mp3dec.axf
+        device/acer/a500/prebuilt/system/etc/firmware/bcm4329.hcd:system/etc/firmware/bcm4329.hcd \
+        device/acer/a500/prebuilt/system/etc/wifi/bcmdhd.cal:system/etc/wifi/bcmdhd.cal \
+        device/acer/a500/prebuilt/system/etc/firmware/nvmm_mp3dec.axf:system/etc/firmware/nvmm_mp3dec.axf
 
 # Copy toro specific prebuilt files
 PRODUCT_COPY_FILES +=  \
@@ -135,4 +134,4 @@ $(call inherit-product-if-exists, vendor/acer/a500/a500-vendor.mk)
 
 BOARD_WLAN_DEVICE_REV := bcm4329
 WIFI_BAND             := 802_11_ABG
-$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4329/device-bcm.mk)
+#$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4329/device-bcm.mk)

@@ -20,7 +20,6 @@
 -include vendor/acer/a500/BoardConfigVendor.mk
 
 TARGET_BOARD_PLATFORM := tegra
-TARGET_BOARD_INFO_FILE := device/acer/a500/board-info.txt
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_SMP := true
@@ -41,14 +40,22 @@ BOARD_EGL_CFG := device/acer/a500/egl.cfg
 
 BOARD_USES_HGL := true
 BOARD_USES_OVERLAY := true
-#USE_OPENGL_RENDERER := true
+
+USE_OPENGL_RENDERER := true
+TARGET_USES_C2D_COMPOSITION := false
+TARGET_USES_SF_BYPASS := false
+TARGET_HAVE_BYPASS := false
+TARGET_USES_OVERLAY := true
+TARGET_QCOM_HDMI_OUT := true
+TARGET_GRALLOC_USES_ASHMEM := false
+TARGET_USES_GENLOCK := true
+
+TARGET_FORCE_CPU_UPLOAD := true
 
 BOARD_USES_GENERIC_AUDIO := false
 BOARD_PREBUILT_LIBAUDIO := true
 
 TARGET_LIBAGL_USE_GRALLOC_COPYBITS := true
-#TARGET_OTA_ASSERT_DEVICE := a500,picasso
-#BOARD_NO_RGBX_8888 := true
 
 # Use screencap to capture frame buffer for ddms
 BOARD_USE_SCREENCAP := true
@@ -61,30 +68,22 @@ BUILD_LIBCAMERA := true
 BOARD_CAMERA_LIBRARIES := libcameraservice libcamera
 USE_CAMERA_STUB:= false
 
-#TARGET_RECOVERY_PIXEL_FORMAT :="BGRA_8888"
-#TARGET_RECOVERY_UI_LIB := librecovery_ui_a500
-
-# device-specific extensions to the updater binary
-#TARGET_RECOVERY_UPDATER_LIBS += librecovery_updater_a500
-#TARGET_RELEASETOOLS_EXTENSIONS := device/acer/a500
-
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 685768704
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 14539537408
 BOARD_FLASH_BLOCK_SIZE := 4096
 
+# WiFi related defines
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
-WPA_SUPPLICANT_VERSION      := VER_0_8_X
+WPA_SUPPLICANT_VERSION := VER_0_8_X
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_wext
-BOARD_HOSTAPD_DRIVER        := WEXT
-BOARD_HOSTAPD_PRIVATE_LIB   := lib_driver_cmd_wext
-BOARD_WLAN_DEVICE           := bcm4329
-WIFI_DRIVER_FW_PATH_PARAM   := "/sys/module/bcm4329/parameters/firmware_path"
-WIFI_DRIVER_MODULE_PATH     := "/system/lib/modules/bcm4329.ko"
-WIFI_DRIVER_FW_PATH_STA     := "/system/vendor/firmware/fw_bcmdhd.bin"
-WIFI_DRIVER_FW_PATH_AP      := "/system/vendor/firmware/fw_bcmdhd_apsta.bin"
-WIFI_DRIVER_MODULE_NAME     := "bcm4329"
-WIFI_DRIVER_MODULE_ARG      := "firmware_path=/system/vendor/firmware/fw_bcmdhd.bin nvram_path=/system/etc/nvram.txt iface_name=wlan0"
+BOARD_WLAN_DEVICE := bcm4329
+WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/bcm4329.ko"
+WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/vendor/firmware/fw_bcm4329.bin nvram_path=/system/etc/wifi/bcmdhd.cal dhd_watchdog_ms=10 dhd_poll=1"
+WIFI_DRIVER_FW_PATH_AP := "/system/vendor/firmware/fw_bcm4329_apsta.bin"
+WIFI_DRIVER_FW_PATH_STA := "/system/vendor/firmware/fw_bcm4329.bin"
+WIFI_DRIVER_MODULE_NAME := "bcm4329"
+BOARD_WEXT_NO_COMBO_SCAN := true
 
 BOARD_HAS_SDCARD_INTERNAL := true
 
@@ -93,6 +92,7 @@ BOARD_DATA_FILESYSTEM := ext4
 BOARD_CACHE_DEVICE := /dev/block/mmcblk0p4
 BOARD_CACHE_FILESYSTEM := ext4
 
+BOARD_HAS_SDCARD_INTERNAL := true
 BOARD_SDCARD_DEVICE_PRIMARY := /dev/block/mmcblk1p1
 BOARD_HAS_NO_MISC_PARTITION := true
 BOARD_HAS_NO_SELECT_BUTTON := true

@@ -33,8 +33,7 @@ $(call inherit-product, $(LOCAL_PATH)/device.mk)
 
 $(call inherit-product, vendor/aokp/configs/common_tablet.mk)
 
-# Inherit common build.prop overrides
--include vendor/aokp/products/common_versions.mk
+$(call inherit-product, vendor/aokp/configs/common_versions.mk)
 
 # Set those variables here to overwrite the inherited values.
 PRODUCT_NAME := aokp_a500
