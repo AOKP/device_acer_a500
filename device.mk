@@ -115,6 +115,9 @@ ADDITIONAL_DEFAULT_PROPERTIES += \
     ro.secure=0 \
     persist.service.adb.enable=1
 
+PRODUCT_BUILD_PROP_OVERRIDES += \
+    wifi.interface=wlan0
+
 
 PRODUCT_CHARACTERISTICS := tablet
 PRODUCT_TAGS += dalvik.gc.type-precise
