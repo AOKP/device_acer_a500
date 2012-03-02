@@ -17,17 +17,17 @@ loglevel 3
     export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin
     export LD_LIBRARY_PATH /vendor/lib:/system/lib
     export ANDROID_BOOTLOGO 1
+    export ANDROID_CACHE /cache
     export ANDROID_ROOT /system
     export ANDROID_ASSETS /system/app
     export ANDROID_DATA /data
     export ASEC_MOUNTPOINT /mnt/asec
     export LOOP_MOUNTPOINT /mnt/obb
-    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/filterfw.jar:/system/framework/com.acer.android.os.jar
+    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/filterfw.jar
 
 # Backward compatibility
     symlink /system/etc /etc
     symlink /sys/kernel/debug /d
-    symlink /system/vendor /flexrom
 
 # Right now vendor lives on the same filesystem as system,
 # but someday that may change.
@@ -40,7 +40,7 @@ loglevel 3
 
     mkdir /system
     mkdir /data 0771 system system
-    mkdir /cache 0770 system cache
+    mkdir /cache 0771 system cache
     mkdir /config 0500 root root
 
     # Directory for putting things only root should see.
@@ -89,6 +89,10 @@ loglevel 3
     # 5.0 %
     write /dev/cpuctl/bg_non_interactive/cpu.shares 52
 
+# Allow everybody to read the xt_qtaguid resource tracking misc dev.
+# This is needed by any process that uses socket tagging.
+    chmod 0644 /dev/xt_qtaguid
+
 on fs
 # mount mtd partitions
     # Mount /system rw first to give the filesystem a chance to save a checkpoint
@@ -103,7 +107,7 @@ on post-fs
 
     # We chown/chmod /cache again so because mount is run as root + defaults
     chown system cache /cache
-    chmod 0770 /cache
+    chmod 0771 /cache
 
     # This may have been created by the recovery system with odd permissions
     chown system cache /cache/recovery
@@ -148,9 +152,9 @@ on post-fs-data
     mkdir /data/misc/bluetoothd 0770 bluetooth bluetooth
     mkdir /data/misc/bluetooth 0770 system system
     mkdir /data/misc/keystore 0700 keystore keystore
-    mkdir /data/misc/vpn 0770 system system
+    mkdir /data/misc/keychain 0771 system system
+    mkdir /data/misc/vpn 0770 system vpn
     mkdir /data/misc/systemkeys 0700 system system
-    mkdir /data/misc/vpn/profiles 0770 system system
     # give system access to wpa_supplicant.conf for backup and restore
     mkdir /data/misc/wifi 0770 wifi wifi
     chmod 0660 /data/misc/wifi/wpa_supplicant.conf
@@ -161,8 +165,14 @@ on post-fs-data
     mkdir /data/app 0771 system system
     mkdir /data/property 0700 root root
 
-    # create dalvik-cache, so as to enforce our permissions
+    # create dalvik-cache and double-check the perms, so as to enforce our permissions
     mkdir /data/dalvik-cache 0771 system system
+    chown system system /data/dalvik-cache
+    chmod 0771 /data/dalvik-cache
+
+    mkdir /cache/dalvik-cache 0771 system system
+    chown system system /cache/dalvik-cache
+    chmod 0771 /cache/dalvik-cache
 
     # create resource-cache and double-check the perms
     mkdir /data/resource-cache 0771 system system
@@ -181,6 +191,14 @@ on post-fs-data
     # Set indication (checked by vold) that we have finished this action
     #setprop vold.post_fs_data_done 1
 
+    chown system system /sys/class/android_usb/android0/f_mass_storage/lun/file
+    chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun/file
+    chown system system /sys/class/android_usb/android0/f_rndis/ethaddr
+    chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
+
+# Include extra init file
+    import /system/etc/init.local.rc
+
 on boot
 # basic network init
     ifup lo
@@ -190,19 +208,62 @@ on boot
 # set RLIMIT_NICE to allow priorities from 19 to -20
     setrlimit 13 40 40
 
-# Memory management.  Basic kernel parameters, and allow the high
-# level system server to be able to adjust the kernel OOM driver
-# paramters to match how it is managing things.
+# Define the oom_adj values for the classes of processes that can be
+# killed by the kernel.  These are used in ActivityManagerService.
+    setprop ro.FOREGROUND_APP_ADJ 0
+    setprop ro.VISIBLE_APP_ADJ 1
+    setprop ro.PERCEPTIBLE_APP_ADJ 2
+    setprop ro.HEAVY_WEIGHT_APP_ADJ 3
+    setprop ro.SECONDARY_SERVER_ADJ 4
+    setprop ro.BACKUP_APP_ADJ 5
+    setprop ro.HOME_APP_ADJ 6
+    setprop ro.HIDDEN_APP_MIN_ADJ 7
+    setprop ro.EMPTY_APP_ADJ 15
+
+# Define the memory thresholds at which the above process classes will
+# be killed.  These numbers are in pages (4k).
+    # These are currently tuned for tablets with approx 1GB RAM.
+    setprop ro.FOREGROUND_APP_MEM 8192
+    setprop ro.VISIBLE_APP_MEM 10240
+    setprop ro.PERCEPTIBLE_APP_MEM 12288
+    setprop ro.HEAVY_WEIGHT_APP_MEM 12288
+    setprop ro.SECONDARY_SERVER_MEM 14336
+    setprop ro.BACKUP_APP_MEM 14336
+    setprop ro.HOME_APP_MEM 14336
+    setprop ro.HIDDEN_APP_MEM 20192
+    setprop ro.EMPTY_APP_MEM 28468
+
+    # Old values for phones.  Should probably be adjusted up for the next
+    # phone version.
+    #setprop ro.FOREGROUND_APP_MEM 2048
+    #setprop ro.VISIBLE_APP_MEM 3072
+    #setprop ro.PERCEPTIBLE_APP_MEM 4096
+    #setprop ro.HEAVY_WEIGHT_APP_MEM 4096
+    #setprop ro.SECONDARY_SERVER_MEM 6144
+    #setprop ro.BACKUP_APP_MEM 6144
+    #setprop ro.HOME_APP_MEM 6144
+    #setprop ro.HIDDEN_APP_MEM 7168
+    #setprop ro.EMPTY_APP_MEM 8192
+
+# Write value must be consistent with the above properties.
+# Note that the driver only supports 6 slots, so we have combined some of
+# the classes into the same memory level; the associated processes of higher
+# classes will still be killed first.
+    write /sys/module/lowmemorykiller/parameters/adj 0,1,2,4,7,15
+
     write /proc/sys/vm/overcommit_memory 1
     write /proc/sys/vm/min_free_order_shift 4
     chown root system /sys/module/lowmemorykiller/parameters/adj
     chmod 0664 /sys/module/lowmemorykiller/parameters/adj
     chown root system /sys/module/lowmemorykiller/parameters/minfree
     chmod 0664 /sys/module/lowmemorykiller/parameters/minfree
+    write /sys/module/lowmemorykiller/parameters/minfree 8192,10240,12288,14336,20192,28468
 
     # Tweak background writeout
     write /proc/sys/vm/dirty_expire_centisecs 200
-    write /proc/sys/vm/dirty_background_ratio  5
+    write /proc/sys/vm/dirty_ratio  2
+    write /proc/sys/vm/dirty_background_ratio  1
+    write /proc/sys/vm/vfs_cache_pressure  1000
 
     # Permissions for System Server and daemons.
     chown radio system /sys/android_power/state
@@ -255,7 +316,8 @@ on boot
 
 # Set this property so surfaceflinger is not started by system_init
     setprop system_init.startsurfaceflinger 0
-
+	
+	start sysinit
     class_start core
     class_start main
 
@@ -288,10 +350,6 @@ on property:vold.decrypt=trigger_shutdown_framework
     class_reset late_start
     class_reset main
 
-on property:ro.product.name=picasso3g_att
-    write /sys/class/net/usb1/mtu 1410
-    setprop net.tcp.buffersize.umts    4094,87380,3083520,4096,16384,65760
-
 ## Daemon processes to be run by init.
 ##
 service ueventd /sbin/ueventd
@@ -317,9 +375,6 @@ service adbd /sbin/adbd
 on property:ro.kernel.qemu=1
     start adbd
 
-on property:ro.baseband.module=em820w
-    setprop net.tcp.buffersize.umts    4094,87380,3083520,4096,16384,1027840
-
 service servicemanager /system/bin/servicemanager
     class core
     user system
@@ -344,11 +399,11 @@ service debuggerd /system/bin/debuggerd
     class main
 
 service ril-daemon /system/bin/rild
-    class late_start
+    class main
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
     user root
-    group radio cache inet misc audio sdcard_rw
+    group radio cache inet misc audio sdcard_rw log
 
 service surfaceflinger /system/bin/surfaceflinger
     class main
@@ -361,7 +416,6 @@ service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-sys
     socket zygote stream 666
     onrestart write /sys/android_power/request_state wake
     onrestart write /sys/power/state on
-    onrestart restart surfaceflinger
     onrestart restart media
     onrestart restart netd
 
@@ -406,6 +460,10 @@ service flash_recovery /system/etc/install-recovery.sh
     class main
     oneshot
 
+service sysinit /system/bin/logwrapper /system/xbin/busybox run-parts /system/etc/init.d
+    disabled
+    oneshot
+
 service racoon /system/bin/racoon
     class main
     socket racoon stream 600 system system
@@ -433,3 +491,34 @@ service dumpstate /system/bin/dumpstate -s
     socket dumpstate stream 0660 shell log
     disabled
     oneshot
+
+# 3G permissions new
+on device-added-/dev/ttyUSB0
+    chmod 0777 /dev/ttyUSB0
+
+on device-added-/dev/ttyUSB1
+    chmod 0777 /dev/ttyUSB1
+
+on device-added-/dev/ttyUSB2
+    chmod 0777 /dev/ttyUSB2
+on device-added-/dev/ttyUSB2
+    start ril-daemon
+
+on device-removed-/dev/ttyUSB2
+    start kill-pppd
+on device-removed-/dev/ttyUSB2
+    stop ril-daemon
+
+service kill-pppd /sbin/busybox killall pppd
+    user root
+    oneshot
+    disabled
+    
+# adb over network
+on property:service.adb.tcp.port=5555
+    stop adbd
+    start adbd
+on property:service.adb.tcp.port=-1
+    stop adbd
+    start adbd
+
