@@ -115,7 +115,7 @@ ADDITIONAL_DEFAULT_PROPERTIES += \
     ro.secure=0 \
     persist.service.adb.enable=1
 
-PRODUCT_BUILD_PROP_OVERRIDES += \
+PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0
 
 
