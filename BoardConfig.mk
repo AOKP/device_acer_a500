@@ -20,7 +20,6 @@
 -include vendor/acer/a500/BoardConfigVendor.mk
 
 TARGET_BOARD_PLATFORM := tegra
-TARGET_BOARD_INFO_FILE := device/acer/a500/board-info.txt
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_SMP := true
@@ -41,7 +40,17 @@ BOARD_EGL_CFG := device/acer/a500/egl.cfg
 
 BOARD_USES_HGL := true
 BOARD_USES_OVERLAY := true
-#USE_OPENGL_RENDERER := true
+
+USE_OPENGL_RENDERER := true
+TARGET_USES_C2D_COMPOSITION := false
+TARGET_USES_SF_BYPASS := false
+TARGET_HAVE_BYPASS := false
+TARGET_USES_OVERLAY := true
+TARGET_QCOM_HDMI_OUT := true
+TARGET_GRALLOC_USES_ASHMEM := false
+TARGET_USES_GENLOCK := true
+
+TARGET_FORCE_CPU_UPLOAD := true
 
 BOARD_USES_GENERIC_AUDIO := false
 BOARD_PREBUILT_LIBAUDIO := true
@@ -81,10 +90,10 @@ BOARD_HOSTAPD_PRIVATE_LIB   := lib_driver_cmd_wext
 BOARD_WLAN_DEVICE           := bcm4329
 WIFI_DRIVER_FW_PATH_PARAM   := "/sys/module/bcm4329/parameters/firmware_path"
 WIFI_DRIVER_MODULE_PATH     := "/system/lib/modules/bcm4329.ko"
-WIFI_DRIVER_FW_PATH_STA     := "/system/vendor/firmware/fw_bcmdhd.bin"
-WIFI_DRIVER_FW_PATH_AP      := "/system/vendor/firmware/fw_bcmdhd_apsta.bin"
+WIFI_DRIVER_FW_PATH_STA     := "/system/vendor/firmware/fw_bcm4329.bin"
+WIFI_DRIVER_FW_PATH_AP      := "/system/vendor/firmware/fw_bcm4329_apsta.bin"
 WIFI_DRIVER_MODULE_NAME     := "bcm4329"
-WIFI_DRIVER_MODULE_ARG      := "firmware_path=/system/vendor/firmware/fw_bcmdhd.bin nvram_path=/system/etc/nvram.txt iface_name=wlan0"
+WIFI_DRIVER_MODULE_ARG      := "firmware_path=/system/vendor/firmware/fw_bcm4329.bin nvram_path=/system/etc/nvram.txt iface_name=wlan0"
 
 BOARD_HAS_SDCARD_INTERNAL := true
 
