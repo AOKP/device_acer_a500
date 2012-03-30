@@ -38,8 +38,6 @@ $(call inherit-product, vendor/aokp/configs/common_tablet.mk)
 
 # Set those variables here to overwrite the inherited values.
 
-PRODUCT_BUILD_PROP_OVERRIDES += BUILD_ID=IML74K
-
 PRODUCT_NAME := aokp_a500
 PRODUCT_DEVICE := a500
 PRODUCT_BRAND := Acer
