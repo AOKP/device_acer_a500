@@ -29,7 +29,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
 # This is where we'd set a backup provider if we had one
 #$(call inherit-product, device/sample/products/backup_overlay.mk)
 # Inherit from tuna device
-$(call inherit-product, $(LOCAL_PATH)/device.mk)
+$(call inherit-product, $(LOCAL_PATH)/a500.mk)
 
 $(call inherit-product, vendor/aokp/configs/common_tablet.mk)
 
@@ -38,7 +38,7 @@ $(call inherit-product, vendor/aokp/configs/common_tablet.mk)
 
 # Set those variables here to overwrite the inherited values.
 
-PRODUCT_NAME := aokp_a500
+PRODUCT_NAME := full_a500
 PRODUCT_DEVICE := a500
 PRODUCT_BRAND := Acer
 PRODUCT_MODEL := Acer Iconia A500
